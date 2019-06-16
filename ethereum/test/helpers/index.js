@@ -28,7 +28,7 @@ async function expectThrowMessage(promise, msg) {
 }
 
 const toNumber = (nr) => {
-    return (web3utils.isBigNumber(nr) ? nr.toNumber() : nr);
+    return (web3utils.isBN(nr) /*isBigNumber(nr)*/ ? nr.toNumber() : nr);
 };
 
 module.exports = {

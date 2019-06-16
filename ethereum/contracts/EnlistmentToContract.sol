@@ -1,4 +1,5 @@
-pragma solidity >=0.4.21 <0.6.0;
+pragma solidity ^0.5.0;
+
 
 contract EnlistmentToContract {
 
@@ -101,8 +102,7 @@ contract EnlistmentToContract {
     }
 
     modifier agreementCanBeSubmitted(string memory tenantEmail) {
-        require(tenantAgreementMap[tenantEmail].status == AgreementStatus.UNINITIALIZED ||
-        tenantAgreementMap[tenantEmail].status == AgreementStatus.REJECTED || tenantAgreementMap[tenantEmail].status == AgreementStatus.CANCELLED);
+        require(tenantAgreementMap[tenantEmail].status == AgreementStatus.UNINITIALIZED || tenantAgreementMap[tenantEmail].status == AgreementStatus.REJECTED || tenantAgreementMap[tenantEmail].status == AgreementStatus.CANCELLED);
         _;
     }
 
@@ -168,20 +168,14 @@ contract EnlistmentToContract {
         tenantOfferMap[tenantEmail].status = result ? OfferStatus.ACCEPTED : OfferStatus.REJECTED;
     }
 
-    function submitDraft(string memory tenantEmail, string memory landlordName, 
-    string memory agreementTenantName, string memory agreementTenantEmail, uint leaseStart, uint handoverDate, 
-    uint leasePeriod, string memory otherTerms, string memory hash) public payable
+    function submitDraft(string memory tenantEmail, string memory landlordName, string memory agreementTenantName, string memory agreementTenantEmail, uint leaseStart, uint handoverDate, uint leasePeriod, string memory otherTerms, string memory hash) public payable
         ownerOnly()
         offerExists(tenantEmail)
         offerInStatus(OfferStatus.ACCEPTED, tenantEmail)
         agreementCanBeSubmitted(tenantEmail)
     {
         int256 amount = tenantOfferMap[tenantEmail].amount;
-        tenantAgreementMap[tenantEmail] = AgreementDraft(landlordName,
-            agreementTenantName, agreementTenantEmail,
-            amount, leaseStart,
-            handoverDate, leasePeriod,
-            otherTerms, hash, "", "", AgreementStatus.PENDING);
+        tenantAgreementMap[tenantEmail] = AgreementDraft(landlordName, agreementTenantName, agreementTenantEmail, amount, leaseStart, handoverDate, leasePeriod, otherTerms, hash, "", "", AgreementStatus.PENDING);
     }
 
     // getAgreement functions:
@@ -256,3 +250,4 @@ contract EnlistmentToContract {
         tenantAgreementMap[tenantEmail].status = AgreementStatus.COMPLETED;
     }
 }
+
