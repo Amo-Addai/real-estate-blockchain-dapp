@@ -104,11 +104,15 @@ It enables end-users to perform a number of actions regarding Property Enlistmen
 Property enlistment is the core entity in the project. This API allows to create property enlistment in the database. Once created, it should be validated and either approved or rejected. Aproval triggers the deployment of Ethereum smart contract. 
 
 #### Create enlistment
+```
 POST http://localhost:8080/enlistments
+```
 Allows to create property enlistment
 
 #### Approve enlistment
+```
 POST http://localhost:8080/enlistments/{{enlistmentId}}/approve
+```
 Approve property enlistment after manual validation. Successful aproval triggers Ethereum smart contract deployment. 
 
 #### 
