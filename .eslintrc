@@ -1,0 +1,52 @@
+{
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "globals": {
+    "Models": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "google",
+    "plugin:node/recommended"
+  ],
+  "plugins": [
+    "node"
+  ],
+  "rules": {
+    "max-len": [
+      "error",
+      140
+    ],
+    "require-jsdoc": "off",
+    "valid-jsdoc": "off",
+    "comma-dangle": "off",
+    "object-curly-spacing": "off",
+    "no-console": [
+      "error",
+      {
+        "allow": [
+          "info",
+          "warn",
+          "error"
+        ]
+      }
+    ],
+    "arrow-spacing": "error",
+    "arrow-parens": "off",
+    "curly": [
+      "error",
+      "all"
+    ],
+    "eqeqeq": [
+      "error",
+      "always"
+    ],
+    "no-multi-spaces": "error",
+    "camelcase": "error",
+    "one-var": "off",
+    "linebreak-style": "off",
+    "keyword-spacing": "off"
+  }
+}
