@@ -100,7 +100,7 @@ This sections explains all the different functionalities offered by the Decentra
 It enables end-users to perform a number of actions regarding Property Enlistment. Such actions are as follows:
 
 
-### Property Enlistments
+## Property Enlistments
 
 Property enlistment is the core entity in the project. This API allows to create property enlistment in the database. Once created, it should be validated and either approved or rejected. Aproval triggers the deployment of Ethereum smart contract. 
 
@@ -153,7 +153,7 @@ GET http://localhost:8080/enlistments?latitude=58.37947&longitude=26.7321715&dis
 ```
 
 
-### Property Offers
+## Property Offers
 
 This section of the API handles all offers for available properties that are sent to landlords by interested individuals. These offers are then reviewed (either approved or rejected) by the landlords of the corresponding properties.
 
@@ -191,94 +191,86 @@ GET http://localhost:8080/enlistments/{{enlistmentId}}/offers?tenantEmail=kopyla
 ```
 
 
-#### 
+## Rental Agreements
+
+Once after landlord and tenant agreed on the offer, the landlord issues a rental agreement draft and the contract negotiation starts. Eventually, both parties sign the agreement and the deal is considered closed.
+
+#### Send agreement draft
+Alows to create agreement draft.
+```
+POST http://localhost:8080/enlistments/{{enlistmentId}}/agreements
+```
+BODY
+```json
+{
+    "tenantEmail": "kopylash@ut.ee",
+	"landlordName": "Vlad Kopylash",
+	"agreementTenantName": "Vlad Kopylash",
+	"agreementTenantEmail": "kopylash@ut.ee",
+	"leaseStart": 1526228716370,
+	"handoverDate": 1526229189241,
+	"leasePeriod": 6,
+	"otherTerms": "not provided",
+	"hash": "QmVrQUcG6XjUjtPuYRCfeKRaKZKkt8NBXYAEz4CiqczTLM"
+}
 ```
 
+#### Get agreement
+Gets agreement created for a specific tenant identified by tenantEmail.
+```
+GET http://localhost:8080/enlistments/{{enlistmentId}}/agreements?tenantEmail=kopylash@ut.ee
 ```
 
-
-#### 
+#### Review agreement
+This method allows to accept of reject the agreement identified by tenantEmail.
+```
+POST http://localhost:8080/enlistments/{{enlistmentId}}/agreements/review
+```
+BODY
+```json
+{
+    "tenantEmail": "kopylash@ut.ee",
+	"confirmed": true
+}
 ```
 
+#### Sign agreement
+This method allows to sign the agreement by providing:
+- signing party
+- signature hash
+- tenant email to identify the agreement
+```
+POST http://localhost:8080/enlistments/{{enlistmentId}}/agreements/sign
+```
+BODY
+```json
+{
+	"tenantEmail": "kopylash@ut.ee",
+	"party": "tenant",
+	"signatureHash": "Tenant0x11e"
+}
 ```
 
-
-#### 
+#### Cancel agreement
+Allows to cancel agreement before it was sealed with 2 signatures.
+```
+POST http://localhost:8080/enlistments/{{enlistmentId}}/agreements/cancel
+```
+BODY
+```json
+{
+	"tenantEmail": "kopylash@ut.ee"
+}
 ```
 
+### Payment received
+For testing purposes only. Simulates the receiving of first month payment and sets the final status to the rental agreement.
 ```
-
-
-#### 
+POST http://localhost:8080/enlistments/{{enlistmentId}}/payments
 ```
-
+BODY
+```json
+{
+	"tenantEmail": "kopylash@ut.ee"
+}
 ```
-
-
-#### 
-```
-
-```
-
-
-#### 
-```
-
-```
-
-
-#### 
-```
-
-```
-
-
-#### 
-```
-
-```
-
-
-#### 
-```
-
-```
-
-
-#### 
-```
-
-```
-
-
-#### 
-```
-
-```
-
-
-#### 
-```
-
-```
-
-
-#### 
-```
-
-```
-
-
-#### 
-```
-
-```
-
-
-#### 
-```
-
-```
-
-
-
