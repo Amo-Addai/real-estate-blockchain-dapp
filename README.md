@@ -99,57 +99,186 @@ This sections explains all the different functionalities offered by the Decentra
 
 It enables end-users to perform a number of actions regarding Property Enlistment. Such actions are as follows:
 
+
 ### Property Enlistments
 
 Property enlistment is the core entity in the project. This API allows to create property enlistment in the database. Once created, it should be validated and either approved or rejected. Aproval triggers the deployment of Ethereum smart contract. 
 
 #### Create enlistment
+Allows to create property enlistment
 ```
 POST http://localhost:8080/enlistments
 ```
-Allows to create property enlistment
+BODY
+```json
+{
+    "landlordName": "John Doe",
+	"streetName": "Raatuse",
+	"floor": 6,
+	"apartment": 628,
+	"house": 22,
+	"zipCode": 51009,
+	"latitude": 58.3817947,
+	"longitude": 26.7321715
+}
+```
 
 #### Approve enlistment
+Approve property enlistment after manual validation. Successful aproval triggers Ethereum smart contract deployment. 
 ```
 POST http://localhost:8080/enlistments/{{enlistmentId}}/approve
 ```
-Approve property enlistment after manual validation. Successful aproval triggers Ethereum smart contract deployment. 
+BODY
+```json
+{}
+```
+
+#### Reject enlistment
+Allows to reject the PENDING property enlistment in case of failed manual validation. Sets the status to REJECTED. rejected enlistments cannot be queried.
+```
+POST http://localhost:8080/enlistments/{{enlistmentId}}/reject
+```
+BODY
+```json
+{}
+```
+
+#### Geosearch
+This method allows to retreive all property enlistments in a given location, where location is defined by:
+- latitude
+- longitude
+- distance in meters
+```
+GET http://localhost:8080/enlistments?latitude=58.37947&longitude=26.7321715&distance=3000
+```
+
+
+### Property Offers
+
+This section of the API handles all offers for available properties that are sent to landlords by interested individuals. These offers are then reviewed (either approved or rejected) by the landlords of the corresponding properties.
+
+#### Send offer to enlistment
+When tenant is ready to make an offer, this method allows to do it, specifying tenant name, email and amount he is ready to pay.
+```
+POST http://localhost:8080/enlistments/{{enlistmentId}}/offers
+```
+BODY
+```json
+{
+	"tenantName": "Vlad Kopylash",
+	"amount": 250,
+	"tenantEmail": "kopylash@ut.ee"
+}
+```
+
+#### Review offer
+This method allows to accept of reject the offer identified by tenantEmail.
+```
+POST http://localhost:8080/enlistments/{{enlistmentId}}/offers/review
+```
+BODY
+```json
+{
+	"tenantEmail": "kopylash@ut.ee",
+	"approved": true
+}
+```
+
+#### Get offer
+Returns the offer for a specific tenant identified by tenantEmail.
+```
+GET http://localhost:8080/enlistments/{{enlistmentId}}/offers?tenantEmail=kopylash@ut.ee
+```
+
 
 #### 
+```
 
-
-
-#### 
-
-
-
-####
-
-
+```
 
 
 #### 
+```
 
-
-
-#### 
-
-
-
-####
-
-
+```
 
 
 #### 
+```
 
+```
 
 
 #### 
+```
+
+```
 
 
+#### 
+```
 
-####
+```
+
+
+#### 
+```
+
+```
+
+
+#### 
+```
+
+```
+
+
+#### 
+```
+
+```
+
+
+#### 
+```
+
+```
+
+
+#### 
+```
+
+```
+
+
+#### 
+```
+
+```
+
+
+#### 
+```
+
+```
+
+
+#### 
+```
+
+```
+
+
+#### 
+```
+
+```
+
+
+#### 
+```
+
+```
 
 
 
