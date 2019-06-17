@@ -1,8 +1,19 @@
 const web3utils = require('web3-utils');
 
-// helper assert fn to avoid BigNumber declarations in tests which involve data structures returned by Solidity. move to separate file
+//  HELPER FUNCTIONS TO HELP ALL THE TESTING FUNCTIONS ..
+
+const structToArray = (structArr) => {
+    return new Promise ((resolve, reject) => {
+        var arr = [], k = null;
+        structArr = JSON.parse(JSON.stringify(structArr));
+        for(k in structArr) arr.push(structArr[k]);
+        // console.log(JSON.stringify(arr));
+        resolve(JSON.parse(JSON.stringify(arr)));
+    });
+};
+
 const structEqual = (structArr1, structArr2) => {
-    if (structArr1.length !== structArr2.length) {
+    if (structArr1.length != structArr2.length) {
         assert.fail(structArr1.length, structArr2.length, 'struct size mismatch');
     }
     structArr1.forEach((prop, idx) => {
@@ -28,10 +39,11 @@ async function expectThrowMessage(promise, msg) {
 }
 
 const toNumber = (nr) => {
-    return (web3utils.isBN(nr) /*isBigNumber(nr)*/ ? nr.toNumber() : nr);
+    return (web3utils.isBN(nr) /* DEPRECATED -> isBigNumber(nr)*/ ? nr.toNumber() : nr);
 };
 
 module.exports = {
+    structToArray,
     structEqual,
     bigNumberEqual,
     expectThrowMessage

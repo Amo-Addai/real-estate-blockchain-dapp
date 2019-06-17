@@ -93,11 +93,11 @@ npm start
 
 # How it Works
 
-This sections explains all the different functionalities offered by the Decentralized Application
+This sections explains all the different functionalities offered by the Decentralized Application. It enables end-users to perform a number of actions regarding Property Enlistment. The DApp has a simple easy-to-use User Interface which communicates with the Node.js Express Server through a REST API, using HTTP and JSON Data format.
 
 ## Server API Documentation
 
-It enables end-users to perform a number of actions regarding Property Enlistment. Such actions are as follows:
+The Express Server contains a number of actions / functions packaged as handlers for incoming HTTP Requests from the DApp client. Such actions are as follows:
 
 
 ## Property Enlistments
