@@ -287,7 +287,7 @@ contract EnlistmentToContract {
         // EVENTUALLY, THE RENT AMOUNT & THE CONTRACT'S DURATION MUST BOTH BE MADE DYNAMIC
     }
     
-    function receiveMonthlyRent(string memory tenantEmail, int amount) public payable
+    function receiveMonthlyRent(string memory tenantEmail, uint amount) public payable
         ownerOnly()
         offerExists(tenantEmail)
         offerInStatus(OfferStatus.ACCEPTED, tenantEmail)
@@ -298,4 +298,3 @@ contract EnlistmentToContract {
     }
 
 }
-

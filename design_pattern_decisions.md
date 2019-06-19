@@ -95,6 +95,7 @@ function () external payable { // NO function name, params, or return values ..
 }
 ```
 
+
 ## Self-destruct / Mortal Design-Pattern
 Implementing the mortal design pattern means including the ability to destroy the contract and remove it from the blockchain. You can destroy a contract using the selfdestruct keyword. The function to do it is often called **kill()**. It takes one parameter which is the address that will receive all of the funds that the contract currently holds. As an irreversible action, restricting access to this function is important.
 
@@ -102,3 +103,17 @@ Implementing the mortal design pattern means including the ability to destroy th
 #### How it Works
 In this **Real Estate Blockchain Decentralized Application** project, the *Self-destruct* design pattern is implemented within the **RentToContract.sol** Smart Contract. It works by the function **killContract()** which can only be called by the owner of the contract using the *ownerOnly* modifier. In this case, the owner is the calling *EnlistmentToContract.sol* Smart Contract.
 
+
+## Fail early and Fail loud Design-Pattern
+This design pattern involves creating a modifier or function which checks the condition required for the execution of a Smart Contract function as early as possible in the function body and throws an exception if the condition is not met. This is a good practice to reduce unnecessary code execution in the event that an exception will be thrown.
+
+
+#### How it Works
+In this **Real Estate Blockchain Decentralized Application** project, the *Fail early* design pattern is implemented within the **RentToContract.sol** Smart Contract. It works by using the modifier *validateAmount()* which uses the function **throwsErrorIfZero(num)**, which then ensures that any amount (rent payment) sent to the Smart Contract (within the *receiveMonthlyRent()* function) is greater than 0. 
+
+
+# Conclusion
+As seen above, those are the main design patterns employed within the project so far. However, there are other patterns that could potentially be added, like the *Speed Bump* or the *Withdrawal* patterns.
+
+
+The **Withdrawal / Pull over Push Payments** design pattern in particular, will be a very good fit for this project. This is the pattern where the sender Smart Contract (the *EnlistmentToContract.sol*) wants to send ether to the receiver Smart Contract (the *RentToContract.sol*), and instead of instantly transfering ether, the sender exposes a *withdraw()* function and alerts the receiver to call it to receive the ether to be sent, so the sender just manages the ether balances for other Smart Contracts. This pattern can be used in this project, but only when the project is expanded to allow ether transfers between tenants and landlords.

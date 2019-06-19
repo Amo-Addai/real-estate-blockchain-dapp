@@ -1,7 +1,10 @@
 pragma solidity ^0.5.0;
 
+import "./SafeMath.sol";
 
 contract RentToContract {
+
+  using SafeMath for uint;
   
   bool public circuitBreakerStopped = false;
   address owner;
@@ -9,13 +12,14 @@ contract RentToContract {
   // 
   string landlord;
   string tenant;
+  uint totalRentPaid;
   Rent rentSetup;
   RentPayment[] payments;
   // 
   mapping(address => bool) admins;
   mapping(string => Rent) rentSetupMap;
   // 
-  event RentPaymentMade(string tenantEmail, uint paymentDate, int amount);
+  event RentPaymentMade(string tenantEmail, uint paymentDate, uint amount);
   // 
   struct Rent {
     string landlordName;
@@ -29,7 +33,7 @@ contract RentToContract {
   struct RentPayment {
     string tenantEmail;
     uint paymentDate;
-    int amount;
+    uint amount;
   }
 
   modifier validateTenant(string memory tenantEmail) { // CHECKS IF THE TENANT (tenantEmail) INDEED IN THE RENT PAYER
@@ -40,6 +44,16 @@ contract RentToContract {
     require((keccak256(abi.encodePacked(mainTn)) == keccak256(abi.encodePacked(tn))), "NOT THE RIGHT TENANT");
     _;
   }
+  
+  modifier validateAmount(uint amount) { // CHECKS IF THE AMOUNT IS HIGHER THAN 0
+    throwsErrorIfZero(amount); // NO NEED TO WORK WITH THE RETURN VALUE FOR NOW ..
+    _;
+  }
+
+  function throwsErrorIfZero(uint num) private pure returns (uint) {
+    require(num != 0);
+    return num;
+  }
 
   modifier isNotDeprecated {
     if(!rentContractExpired()) _;
@@ -49,7 +63,7 @@ contract RentToContract {
     if(rentContractExpired()) _;
   }
 
-  function rentContractExpired() public view returns (bool) {
+  function rentContractExpired() private view returns (bool) {
     return now > contractExpired;
   }
 
@@ -63,7 +77,7 @@ contract RentToContract {
     _;
   }
 
-  function addAdmin(address _a) public onlyAdmin returns (bool) {
+  function addAdmin(address _a) private onlyAdmin returns (bool) {
     admins[_a] = true;
     return true;
   }
@@ -76,12 +90,13 @@ contract RentToContract {
   function withdraw() public onlyInEmergency {} 
   */
 
-  constructor(string memory tenantEmail, string memory tenantName, string memory landlordName, int amount, uint duration) public {
+
+  constructor(string memory tenantEmail, string memory tenantName, string memory landlordName, uint amount, uint duration) public {
     contractExpired = now + duration; // SET THE RENT duration AS THE DATE THAT THIS CONTRACT TO EXPIRE (Auto Deprecate Design Pattern)
     owner = msg.sender; 
     // addAdmin(msg.sender);
     tenant = tenantName; landlord = landlordName;
-    RentPayment memory payment = RentPayment({
+    RentPayment memory payment1 = RentPayment({
       tenantEmail: tenantEmail,
       paymentDate: now,
       amount: amount
@@ -90,26 +105,29 @@ contract RentToContract {
       tenantEmail: tenantEmail,
       tenantName: tenantName,
       landlordName: landlordName,
-      firstPayment: payment,
-      firstPaymentDate: payment.paymentDate,
+      firstPayment: payment1,
+      firstPaymentDate: payment1.paymentDate,
       rentExpirationDate: contractExpired
     }); // SETUP THE RENT OBJECT
     rentSetupMap[tenantEmail] = rentSetup; // DO THIS IN CASE IN FUTURE, YOU'LL WANT TO MANAGE MULTIPLE RENT SETUPS
-    payments.push(payment); // LET'S NOT emit THE RentPaymentMade() EVENT ON THE 1ST PAYMENT
+    payments.push(payment1); // LET'S NOT emit THE RentPaymentMade EVENT ON THE 1ST PAYMENT
+    totalRentPaid = totalRentPaid.add(payment1.amount);
   }
 
-  function receiveMonthlyRent(string memory tenantEmail, int amount) public 
+  function receiveMonthlyRent(string memory tenantEmail, uint amount) public payable
     ownerOnly() 
     // onlyAdmin()
     isNotDeprecated() 
+    validateAmount(amount)
     validateTenant(tenantEmail) 
-  {
+  { // WHEN EXPANDING THE PLATFORM, THIS FUNCTION SHOULD BE ABLE TO RECEIVE RENT IN ETHER TOO ..
     RentPayment memory payment = RentPayment({
       tenantEmail: tenantEmail,
       paymentDate: now,
       amount: amount
     }); // SETUP A RENT PAYMENT OBJECT
-    payments.push(payment);
+    payments.push(payment); // ADD RENT payment, THEN EMIT THE RentPaymentMade EVENT
+    totalRentPaid = totalRentPaid.add(payment.amount);
     emit RentPaymentMade(payment.tenantEmail, payment.paymentDate, payment.amount);
   }
 
