@@ -18,6 +18,32 @@ contract RentToContract {
   // 
   mapping(address => bool) admins;
   mapping(string => Rent) rentSetupMap;
+
+  // GETTER FUNCTIONS 
+
+  function getOwner() public view ownerOnly() returns (address) {
+    return owner;
+  }
+
+  function getLandlord() public view ownerOnly() returns (string memory) {
+    return landlord;
+  }
+
+  function getTenant() public view ownerOnly() returns (string memory) {
+    return tenant;
+  }
+
+  function getTotalRentPaid() public view ownerOnly() returns (uint) {
+    return totalRentPaid;
+  }
+
+  function getNumberOfPayments() public view ownerOnly() returns (uint) {
+    return payments.length;
+  }
+
+  function getRent() public view ownerOnly() returns (string memory, string memory, uint, uint) {
+    return (rentSetup.landlordName, rentSetup.tenantName, rentSetup.firstPaymentDate, rentSetup.rentExpirationDate);
+  }
   // 
   event RentPaymentMade(string tenantEmail, uint paymentDate, uint amount);
   // 

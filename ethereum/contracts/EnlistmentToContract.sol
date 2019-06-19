@@ -284,7 +284,7 @@ contract EnlistmentToContract {
         tenantAgreementMap[tenantEmail].status = AgreementStatus.COMPLETED;
         rentToContract = new RentToContract(tenantEmail, tenantAgreementMap[tenantEmail].tenantName, 
         tenantAgreementMap[tenantEmail].landlordName, 100, 1000000000000); 
-        // EVENTUALLY, THE RENT AMOUNT & THE CONTRACT'S DURATION MUST BOTH BE MADE DYNAMIC
+        // EVENTUALLY, THE RENT AMOUNT & THE CONTRACT'S DURATION MUST BOTH BE MADE DYNAMIC 
     }
     
     function receiveMonthlyRent(string memory tenantEmail, uint amount) public payable

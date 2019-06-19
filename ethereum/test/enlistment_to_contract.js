@@ -58,7 +58,7 @@ contract('EnlistmentToContract', async ([owner]) => {
 
     it('should instantiate the landlord property', async () => {
       let landlord = await contract.getLandlord.call();
-      assert.equal(landlord, 'landlord@email.xd'); // GET landlord OBJECT & CONFIRM THAT IT HAS SAME VALUE OF THE ARGUMENTS PASSED IN
+      assert.equal(landlord, 'landlord@email.xd'); // GET landlord STATE VARIABLE & CONFIRM THAT IT HAS SAME VALUE OF THE ARGUMENTS PASSED IN
     });
 
     it('should instantiate the enlistment', async () => { // GET enlistment OBJECT & CONFIRM THAT IT HAS SAME PROPERTY VALUES OF THE ARGUMENTS PASSED IN
