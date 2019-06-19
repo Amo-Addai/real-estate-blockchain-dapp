@@ -3,19 +3,20 @@ pragma solidity ^0.5.0;
 
 contract RentToContract {
   
-  bool public stopped = false;
-
+  bool public circuitBreakerStopped = false;
   address owner;
+  uint contractExpired; // THE RENT EXPIRATION DATE 
+  // 
   string landlord;
   string tenant;
-  uint contractExpired; // THE RENT EXPIRATION DATE 
   Rent rentSetup;
   RentPayment[] payments;
-  
+  // 
   mapping(address => bool) admins;
   mapping(string => Rent) rentSetupMap;
+  // 
   event RentPaymentMade(string tenantEmail, uint paymentDate, int amount);
-
+  // 
   struct Rent {
     string landlordName;
     string tenantName;
@@ -40,6 +41,23 @@ contract RentToContract {
     _;
   }
 
+  modifier isNotDeprecated {
+    if(!rentContractExpired()) _;
+  }
+
+  modifier isDeprecated {
+    if(rentContractExpired()) _;
+  }
+
+  function rentContractExpired() public view returns (bool) {
+    return now > contractExpired;
+  }
+
+  modifier ownerOnly() {
+    require(msg.sender == owner);
+    _;
+  }
+
   modifier onlyAdmin {
     require(admins[msg.sender] == true, "NOT AN ADMIN");
     _;
@@ -50,35 +68,19 @@ contract RentToContract {
     return true;
   }
 
-  modifier stopInEmergency { require(!stopped, "..."); _; }
-  modifier onlyInEmergency { require(stopped, "..."); _; }
+  modifier stopInEmergency { require(!circuitBreakerStopped, "..."); _; }
+  modifier onlyInEmergency { require(circuitBreakerStopped, "..."); _; }
   
   /* SAMPLE FUNCTIONS TO TEST THE CIRCUIT BREAKER DESIGN PATTERN ..
   function deposit() public stopInEmergency {}
   function withdraw() public onlyInEmergency {} 
   */
 
-  modifier isNotDeprecated {
-      if(!rentContractExpired()) _;
-  }
-
-  modifier isDeprecated {
-      if(rentContractExpired()) _;
-  }
-
-  modifier ownerOnly() {
-      require(msg.sender == owner);
-      _;
-  }
-
-  function rentContractExpired() public view returns (bool) {
-      return now > contractExpired;
-  }
-
   constructor(string memory tenantEmail, string memory tenantName, string memory landlordName, int amount, uint duration) public {
-    // addAdmin(msg.sender);
     contractExpired = now + duration; // SET THE RENT duration AS THE DATE THAT THIS CONTRACT TO EXPIRE (Auto Deprecate Design Pattern)
-    owner = msg.sender; tenant = tenantName; landlord = landlordName;
+    owner = msg.sender; 
+    // addAdmin(msg.sender);
+    tenant = tenantName; landlord = landlordName;
     RentPayment memory payment = RentPayment({
       tenantEmail: tenantEmail,
       paymentDate: now,
@@ -98,6 +100,7 @@ contract RentToContract {
 
   function receiveMonthlyRent(string memory tenantEmail, int amount) public 
     ownerOnly() 
+    // onlyAdmin()
     isNotDeprecated() 
     validateTenant(tenantEmail) 
   {
