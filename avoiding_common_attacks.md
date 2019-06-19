@@ -74,10 +74,9 @@ contract Auction {
 In the provided example, the highestBidder could be another contract and transferring funds to the contract triggers the contract’s fallback function. If the contract’s fallback always reverts, the Auction contract’s bid function becomes unusable - it will always revert. The bid function requires the transfer operation to succeed to fully execute. The contract at the provided address throws an exception, execution halts and the exception is passed into the calling contract and prevents further execution. This problem is avoidable using the withdrawal pattern.
 
 
-## Force Sending Ether Vulnerability
+## Forcefully Sending Ether Vulnerability
 Another danger is using logic that depends on the contract balance. Be aware that it is possible to send ether to a contract without triggering its fallback function. Using the selfdestruct function on another contract and using the target contract as the recipient will force the destroyed contract’s funds to be sent to the target. It is also possible to precompute a contracts address and send ether to the address before the contract is deployed. The contract’s balance will be greater than 0 when it is finally deployed.
 
 
 #### How it Works
-In this **Real Estate Blockchain Decentralized Application** project, the ** security threat is combated within the **RentToContract.sol** Smart Contract. The .. risk is mitigated by ...
-
+In this **Real Estate Blockchain Decentralized Application** project, the *Forcefully Sending Ether* security threat is combated within the **RentToContract.sol** Smart Contract. This risk is mitigated by ensuring that only the **owner** address within the contract receives any ether whenever it self destructs (see `selfdestruct(address(uint160(owner)));` in *killContract()*), and the *ownerOnly* modifier that only the owner of the contract can call the *killContract()* function.
