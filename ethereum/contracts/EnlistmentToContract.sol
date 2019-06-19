@@ -2,6 +2,7 @@ pragma solidity ^0.5.0;
 
 import "./RentToContract.sol";
 
+
 contract EnlistmentToContract {
 
     // MAIN VARIABLES THE CONTRACT WILL BE WORKING WITH
@@ -10,9 +11,13 @@ contract EnlistmentToContract {
     string landlord;
     bool public locked = false;
     Enlistment enlistment;
+    // 
     mapping(string => Offer) tenantOfferMap;
     mapping(string => AgreementDraft) tenantAgreementMap;
-    RentToContract rentToContract;
+    // 
+    uint private rentAmount;
+    address private rentToContractAddress;
+    RentToContract private rentToContract;
 
     constructor(string memory landlordEmail, string memory streetName, int floorNr, int apartmentNr, int houseNr, int postalCode) public
     {   // CREATE A NEW ENLISTMENT STRUCT OBJECT FROM THE PASSED IN ARGUMENTS 
@@ -282,8 +287,16 @@ contract EnlistmentToContract {
         agreementInStatus(AgreementStatus.TENANT_SIGNED, tenantEmail)
     {
         tenantAgreementMap[tenantEmail].status = AgreementStatus.COMPLETED;
-        rentToContract = new RentToContract(tenantEmail, tenantAgreementMap[tenantEmail].tenantName, 
-        tenantAgreementMap[tenantEmail].landlordName, 100, 1000000000000); 
+        
+        // EITHER TRY THIS TO INSTANTIATE THE RentToContract.sol SMART CONTRACT ..
+        // rentToContractAddress = new RentToContract(tenantEmail, tenantAgreementMap[tenantEmail].tenantName, 
+        // tenantAgreementMap[tenantEmail].landlordName, 100, 1000000000000); 
+        // rentToContract = RentToContract(rentToContractAddress);
+        // 
+        // OR, JUST TRY THIS INSTEAD .. ..
+        // rentToContract = new RentToContract(tenantEmail, tenantAgreementMap[tenantEmail].tenantName, 
+        // tenantAgreementMap[tenantEmail].landlordName, 100, 1000000000000); 
+
         // EVENTUALLY, THE RENT AMOUNT & THE CONTRACT'S DURATION MUST BOTH BE MADE DYNAMIC 
     }
     
@@ -293,8 +306,9 @@ contract EnlistmentToContract {
         offerInStatus(OfferStatus.ACCEPTED, tenantEmail)
         agreementInStatus(AgreementStatus.COMPLETED, tenantEmail)
     {
-        // WORK WITH RENT amount
-        rentToContract.receiveMonthlyRent(tenantEmail, amount);
+        rentAmount = amount; // WORK WITH RENT amount
+        // rentToContract.receiveMonthlyRent(tenantEmail, amount);
     }
 
 }
+

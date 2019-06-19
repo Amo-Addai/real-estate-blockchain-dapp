@@ -38,7 +38,7 @@ const revertErrorMsg = 'VM Exception while processing transaction: revert';
 
 contract('EnlistmentToContract', async ([owner]) => {
   // A NEW INSTANCE OF THE SMART CONTRACT IS CREATED FOR ALL TESTING SCENARIOS
-  // eg.  contract = await ETC.new(...)
+  // eg.  instance = await ETC.new(...)
 
   //
   //  TESTING CREATION OF SMART CONTRACT & BASIC FUNCTIONALITIES (PROPERTY ENLISTMENTS)
@@ -46,23 +46,23 @@ contract('EnlistmentToContract', async ([owner]) => {
 
   contract('Enlistment/contract creation', async ([deployerAddress]) => {
 
-    let contract;
+    let instance;
 
     before(async () => { // INSTANTIATE THE SMART CONTRACT WITH THESE INITIAL ARGUMENTS
-      contract = await ETC.new('landlord@email.xd', 'Waker', 3, 2, 1, 15000);
+      instance = await ETC.new('landlord@email.xd', 'Waker', 3, 2, 1, 15000);
     });
 
     it('should deploy a contract instance', async () => {
-      assert.isOk(contract.address); // CONFIRMS THE SMART CONTRACT'S EXISTENCE
+      assert.isOk(instance.address); // CONFIRMS THE SMART CONTRACT'S EXISTENCE
     });
 
     it('should instantiate the landlord property', async () => {
-      let landlord = await contract.getLandlord.call();
+      let landlord = await instance.getLandlord.call();
       assert.equal(landlord, 'landlord@email.xd'); // GET landlord STATE VARIABLE & CONFIRM THAT IT HAS SAME VALUE OF THE ARGUMENTS PASSED IN
     });
 
     it('should instantiate the enlistment', async () => { // GET enlistment OBJECT & CONFIRM THAT IT HAS SAME PROPERTY VALUES OF THE ARGUMENTS PASSED IN
-      let enlistment = await contract.getEnlistment.call(); // returns an array which represents an enlistment struct
+      let enlistment = await instance.getEnlistment.call(); // returns an array which represents an enlistment struct
       assert.equal(enlistment[0], 'Waker');
       assert.equal(enlistment[1], 3);
       assert.equal(enlistment[2], 2);
@@ -71,12 +71,12 @@ contract('EnlistmentToContract', async ([owner]) => {
     });
 
     it('should set locked property to false', async () => {
-      let isLocked = await contract.locked.call();
+      let isLocked = await instance.locked.call();
       assert.isFalse(isLocked); // ENSURES THAT PROPERTY ISN'T LOCKED (ie. IT HASN'T HAD ANY SIGNED AGREEMENT BETWEEN THE LANDLORD & A TENANT)
     });
 
     it('should set the owner property to the address that was used for deployment', async () => {
-      let contractOwner = await contract.getOwner.call();
+      let contractOwner = await instance.getOwner.call();
       assert.equal(deployerAddress, contractOwner); // ENSURES THAT THE OWNER OF THE PROPERTY (ie. SMART CONTRACT) IS THE DEPLOYER ADDRESS
     });
   });
@@ -539,16 +539,22 @@ contract('EnlistmentToContract', async ([owner]) => {
         bigNumberEqual(agreementStatusMap['COMPLETED'], agreementStatus);
       });
 
+      /* // THIS TEST CAN BE LINKED TO THE RENT PAYMENT FLOW TESTS IN rent_to_instance.js TEST FILE
       it('should continue the process upon receiving monthly rent', async () => {
         await instance.receiveMonthlyRent('cassian@reply.xd', 100);
         //  RECEIVE THE OTHER MONTHLY RENTS FROM THE TENANT
+
+        // AN EVENT IS EMITTED, FIND OUT HOW TO TEST FOR THAT TOO
+
         const agreementStatus = await instance.getAgreementStatus.call('cassian@reply.xd');
         // AGREEMENT'S SATUS MUST BE 'COMPLETED'
         bigNumberEqual(agreementStatusMap['COMPLETED'], agreementStatus);
 
-        // CONTINUE TO VERIFY OTHER STUFF (eg. THE RentToContract.sol FUNCTIONS)
+        // CONTINUE TO VERIFY OTHER STUFF (eg. THE RentToinstance.sol FUNCTIONS)
 
       });
+      */
+
     });
   });
 

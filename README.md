@@ -71,18 +71,25 @@ NOTE: Project uses next mnemonic for development purposes, some configs are pred
 candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
 ```
 
-Compile smart contracts.
+Compile the Smart Contracts.
 
 ```
 cd ethereum/
 truffle compile
 ```
 
-Deploy the contracts onto your network of choice (default "development").
+Deploy the Smart contracts onto your network of choice (default "development").
 Check [Truffle docs](http://truffleframework.com/docs/) for details.
 
 ```
 truffle migrate
+```
+
+Test the Smart contracts on your network of choice.
+Check [Truffle docs](http://truffleframework.com/docs/) for details.
+
+```
+truffle test
 ```
 
 Then run server with 

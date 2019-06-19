@@ -9,28 +9,10 @@ const web3utils = require('web3-utils');
 
 const revertErrorMsg = 'VM Exception while processing transaction: revert';
 
-/*
-
-var SelfDestruct = artifacts.require('./SelfDestruct.sol');
-
-module.exports = function(cb){
-    var sd = null;
-    return SelfDestruct.deployed().then((instance) => {
-        sd = instance;
-        sd.setValue("sth");
-        return sd.someValue.call(); // CALL PUBLIC PROPERTY someValue
-    }).then((result) => {
-        console.log("RESULT -> " + result);
-        return sd.killContract();
-    }).then((result) => {
-        console.log("SMART CONTRACT HAS BEEN DESTROYED");
-        sd.setValue("SOME NEW VALUE"); // THIS CALL WILL THROW AN EXCEPTION, COZ THE SMART CONTRACT HAS BEEN DESTROYED NOW ..
-    });
-}
-
-*/
 
 contract('RentToContract', async ([owner]) => {
+    // A NEW INSTANCE OF THE SMART CONTRACT IS CREATED FOR ALL TESTING SCENARIOS
+    // eg.  instance = await RTC.new(...)
         
     //
     //  TESTING CREATION OF SMART CONTRACT & BASIC FUNCTIONALITIES (RENT SETUP)
@@ -38,38 +20,38 @@ contract('RentToContract', async ([owner]) => {
 
     contract('Rent Setup/contract creation', async ([deployerAddress]) => {
 
-        let contract;
+        let instance;
         
         before(async () => { // INSTANTIATE THE SMART CONTRACT WITH THESE INITIAL ARGUMENTS
-            contract = await RTC.new('cassian@reply', 'Cassian', 'Waker', 100, 1000000000000);
+            instance = await RTC.new('cassian@reply.xd', 'Cassian', 'Waker', 100, 1000000000000);
         });
 
         it('should deploy a contract instance', async () => {
-            assert.isOk(contract.address); // CONFIRMS THE SMART CONTRACT'S EXISTENCE
+            assert.isOk(instance.address); // CONFIRMS THE SMART CONTRACT'S EXISTENCE
         });
 
         it('should instantiate the tenant property', async () => {
-            let tenant = await contract.getTenant.call();
+            let tenant = await instance.getTenant.call();
             assert.equal(tenant, 'Cassian'); // GET tenant STATE VARIABLE & CONFIRM THAT IT HAS SAME VALUE OF THE ARGUMENTS PASSED IN
         });
 
         it('should instantiate the landlord property', async () => {
-            let landlord = await contract.getLandlord.call();
+            let landlord = await instance.getLandlord.call();
             assert.equal(landlord, 'Waker'); // GET landlord STATE VARIABLE & CONFIRM THAT IT HAS SAME VALUE OF THE ARGUMENTS PASSED IN
         });
 
         it('should instantiate the totalRentPaid property', async () => {
-            let totalRentPaid = await contract.getTotalRentPaid.call();
+            let totalRentPaid = await instance.getTotalRentPaid.call();
             assert.equal(totalRentPaid, 100); // GET totalRentPaid STATE VARIABLE & CONFIRM THAT IT HAS SAME VALUE OF THE ARGUMENTS PASSED IN
         });
 
         it('should instantiate the numberOfPayments property', async () => {
-            let numberOfPayments = await contract.getNumberOfPayments.call();
+            let numberOfPayments = await instance.getNumberOfPayments.call();
             assert.equal(numberOfPayments, 1); // GET numberOfPayments & CONFIRM THAT I'S 1 (SINCE IT'S ONLY 1 RENT PAYMENT FOR NOW)
         });
 
         it('should instantiate the rent', async () => { // GET rent OBJECT & CONFIRM THAT IT HAS SAME PROPERTY VALUES OF THE ARGUMENTS PASSED IN
-            let rent = await contract.getRent.call(); // returns an array which represents an rent struct
+            let rent = await instance.getRent.call(); // returns an array which represents an rent struct
             // returned data (rentSetup.landlordName, rentSetup.tenantName, rentSetup.firstPaymentDate, rentSetup.rentExpirationDate);
             assert.equal(rent[0], 'Waker');
             assert.equal(rent[1], 'Cassian');
@@ -77,22 +59,54 @@ contract('RentToContract', async ([owner]) => {
         });
 
         it('should set the owner property to the address that was used for deployment', async () => {
-            let contractOwner = await contract.getOwner.call();
+            let contractOwner = await instance.getOwner.call();
             assert.equal(deployerAddress, contractOwner); // ENSURES THAT THE OWNER OF THE PROPERTY (ie. SMART CONTRACT) IS THE DEPLOYER ADDRESS
         });
     });
+        
+    //
+    //  TESTING RENT PAYMENT FUNCTIONALITIES OF SMART CONTRACT 
+    // 
 
+    contract('Rent Payment contract flow', async () => {
+
+        describe('Collecting the monthly rents', async () => {
+
+            let instance;
+
+            //  INITIATE BY SUCCESSFULLY GOING THROUGH THE FULL rent-OFFER-AGREEMENT-DRAFT-SIGNATURE PROCESS
+            beforeEach('create an rent setup, send the next monthly rent', async () => {
+                instance = await RTC.new('cassian@reply.xd', 'Cassian', 'Waker', 100, 1000000000000);
+                // INSTANTIATION OF THIS CONTRACT GOES WITH THE 1ST RENT PAYMENT - 100
+                await instance.receiveMonthlyRent('cassian@reply.xd', 100);
+            });
+
+            it('should have received the correct number of monthly rent payments', async () => {
+                let numberOfPayments = await instance.getNumberOfPayments.call();
+                assert.equal(numberOfPayments, 2); // ENSURE THAT THERE ARE 2 RENT PAYMENTS NOW        
+            });
+
+            it('should have received the correct total amount of monthly rent payments', async () => {
+                let totalRentPaid = await instance.getTotalRentPaid.call();
+                assert.equal(totalRentPaid, 200); // TOTAL RENT PAID NOW MUST BE 200
+            });
+                
+            // CONTINUE TO VERIFY OTHER STUFF 
+            // eg. AN EVENT IS EMITTED, FIND OUT HOW TO TEST FOR THAT TOO
+    
+        });
+    });
+    
     //
     //  TESTING SECURITY FUNCTIONALITIES OF SMART CONTRACT 
     // 
 
-    
     contract('Security', async ([fstAccount, sndAccount]) => {
 
         let instance;
 
-        beforeEach('create an enlistment, send an offer', async () => {
-            contract = await RTC.new('cassian@reply', 'Cassian', 'Waker', 100, 1000000000000);
+        beforeEach('create an rent setup', async () => {
+            instance = await RTC.new('cassian@reply.xd', 'Cassian', 'Waker', 100, 1000000000000);
         });
 
         // ENSURE THAT ONLY THE OWNER'S ADDRESS (THE INSTANTIATOR) CAN ACCESS THE SMART CONTRACT eg. submit an offer

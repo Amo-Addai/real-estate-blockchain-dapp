@@ -1,8 +1,37 @@
 pragma solidity ^0.5.0;
 
-import "./SafeMath.sol";
 
+// import "github.com/oraclize/ethereum-api/oraclizeAPI.sol"; // ORACLIZE LIBRARY TO BE INTEGRATED SOON ..
+import "./SafeMath.sol"; // LIBRARY TO MAKE SAFE MATHEMATICAL CALCULATIONS IN THIS CONTRACT
+
+
+// contract RentToContract is usingOraclize {
 contract RentToContract {
+   
+  /* // ALL THE STUFF YOU'LL NEED TO INTEGRATE WITH ORACLIZE, USING Provable
+  uint public balance;
+
+  event Log(string text);
+  
+
+  function __callback(bytes32 _myid, string memory _result) {
+      require (msg.sender == oraclize_cbAddress());
+      Log(_result);
+      price = parseInt(_result, 2); // let's save it as $ cents
+  }
+  
+  function updatePrice() public payable {
+    emit Log("Oraclize query was sent, waiting for the answer..");
+    oraclize_query("URL","json(https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD).USD");
+    
+    if (oraclize_getPrice("URL") > balance) {
+      emit Log("Oraclize query was NOT sent, please add some ETH to cover for the query fee");
+    } else {
+      emit Log("Oraclize query was sent, standing by for the answer..");
+      oraclize_query("URL", "json(https://api.pro.coinbase.com/products/ETH-USD/ticker).price");
+    }
+  }
+  */
 
   using SafeMath for uint;
   
