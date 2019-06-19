@@ -143,5 +143,16 @@ module.exports = {
     });
 
     return PropertyEnlistmentContractService.receiveFirstMonthRent(enlistment.contractAddress, tenantEmail);
+  },
+
+  async receiveMonthlyRent(enlistmentId, tenantEmail, amount) {
+    const enlistment = await Models.PropertyEnlistment.findOne({
+      where: {
+        id: enlistmentId
+      }
+    });
+
+    return PropertyEnlistmentContractService.receiveMonthlyRent(enlistment.contractAddress, tenantEmail, amount);
   }
+
 };

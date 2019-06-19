@@ -37,6 +37,8 @@ const revertErrorMsg = 'VM Exception while processing transaction: revert';
 // NOTE: MAKE SURE YOU FIND OUT & DEBUG THIS ISSUE
 
 contract('EnlistmentToContract', async ([owner]) => {
+  // A NEW INSTANCE OF THE SMART CONTRACT IS CREATED FOR ALL TESTING SCENARIOS
+  // eg.  contract = await ETC.new(...)
 
   //
   //  TESTING CREATION OF SMART CONTRACT & BASIC FUNCTIONALITIES (PROPERTY ENLISTMENTS)
@@ -535,6 +537,17 @@ contract('EnlistmentToContract', async ([owner]) => {
         const agreementStatus = await instance.getAgreementStatus.call('cassian@reply.xd');
         // AGREEMENT'S SATUS MUST BE 'COMPLETED'
         bigNumberEqual(agreementStatusMap['COMPLETED'], agreementStatus);
+      });
+
+      it('should continue the process upon receiving monthly rent', async () => {
+        await instance.receiveMonthlyRent('cassian@reply.xd', 100);
+        //  RECEIVE THE OTHER MONTHLY RENTS FROM THE TENANT
+        const agreementStatus = await instance.getAgreementStatus.call('cassian@reply.xd');
+        // AGREEMENT'S SATUS MUST BE 'COMPLETED'
+        bigNumberEqual(agreementStatusMap['COMPLETED'], agreementStatus);
+
+        // CONTINUE TO VERIFY OTHER STUFF (eg. THE RentToContract.sol FUNCTIONS)
+
       });
     });
   });

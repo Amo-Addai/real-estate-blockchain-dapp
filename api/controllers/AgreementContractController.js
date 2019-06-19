@@ -43,5 +43,13 @@ module.exports = {
 
     log.info(`First month payment received`);
     res.status(200).send();
+  },
+
+  async receiveMonthlyRent(req, res) {
+    await PropertyEnlistmentService.receiveMonthlyRent(req.params.id, req.body.tenantEmail, req.body.amount);
+
+    log.info(`Other Monthly Rent payment received`);
+    res.status(200).send();
   }
+  
 };

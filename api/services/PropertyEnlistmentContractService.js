@@ -12,7 +12,7 @@ const provider = new Web3.providers.HttpProvider(config.provider);
 const PropertyEnlistmentContract = contract(artifact);
 PropertyEnlistmentContract.setProvider(provider);
 PropertyEnlistmentContract.defaults({
-  from: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',
+  from: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57', // <- ADDRESS OF OWNER OF SMART CONTRACT
   gas: 6000000,
   gasPrice: 1000000000
 });
@@ -131,5 +131,10 @@ module.exports = {
 
   receiveFirstMonthRent(contractAddress, tenantEmail) {
     return PropertyEnlistmentContract.at(contractAddress).then(contract => contract.receiveFirstMonthRent(tenantEmail));
-  }
+  },
+
+  receiveMonthlyRent(contractAddress, tenantEmail, amount) {
+    return PropertyEnlistmentContract.at(contractAddress).then(contract => contract.receiveMonthlyRent(tenantEmail, amount));
+  },
+
 };

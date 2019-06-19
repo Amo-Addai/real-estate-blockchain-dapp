@@ -263,7 +263,7 @@ BODY
 }
 ```
 
-### Payment received
+### First Payment received
 For testing purposes only. Simulates the receiving of first month payment and sets the final status to the rental agreement.
 ```
 POST http://localhost:8080/enlistments/{{enlistmentId}}/payments
@@ -272,5 +272,18 @@ BODY
 ```json
 {
 	"tenantEmail": "kopylash@ut.ee"
+}
+```
+
+### Monthly Rent Payment received
+For testing purposes only. Simulates the receiving of other monthly rent payment.
+```
+POST http://localhost:8080/enlistments/{{enlistmentId}}/monthlypayments
+```
+BODY
+```json
+{
+	"tenantEmail": "kopylash@ut.ee",
+	"amount": 100
 }
 ```

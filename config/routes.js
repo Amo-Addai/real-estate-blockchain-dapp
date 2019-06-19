@@ -68,4 +68,10 @@ module.exports = {
     controller: 'AgreementContractController',
     action: 'receiveFirstMonthRent'
   },
+
+  'POST /enlistments/:id/monthlypayments': {
+    controller: 'AgreementContractController',
+    action: 'receiveMonthlyRent'
+  },
+  
 };

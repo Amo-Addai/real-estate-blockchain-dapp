@@ -1,5 +1,6 @@
 pragma solidity ^0.5.0;
 
+import "./RentToContract.sol";
 
 contract EnlistmentToContract {
 
@@ -11,6 +12,7 @@ contract EnlistmentToContract {
     Enlistment enlistment;
     mapping(string => Offer) tenantOfferMap;
     mapping(string => AgreementDraft) tenantAgreementMap;
+    RentToContract rentToContract;
 
     constructor(string memory landlordEmail, string memory streetName, int floorNr, int apartmentNr, int houseNr, int postalCode) public
     {   // CREATE A NEW ENLISTMENT STRUCT OBJECT FROM THE PASSED IN ARGUMENTS 
@@ -280,6 +282,20 @@ contract EnlistmentToContract {
         agreementInStatus(AgreementStatus.TENANT_SIGNED, tenantEmail)
     {
         tenantAgreementMap[tenantEmail].status = AgreementStatus.COMPLETED;
+        rentToContract = new RentToContract(tenantEmail, tenantAgreementMap[tenantEmail].tenantName, 
+        tenantAgreementMap[tenantEmail].landlordName, 100, 1000000000000); 
+        // EVENTUALLY, THE RENT AMOUNT & THE CONTRACT'S DURATION MUST BOTH BE MADE DYNAMIC
     }
+    
+    function receiveMonthlyRent(string memory tenantEmail, int amount) public payable
+        ownerOnly()
+        offerExists(tenantEmail)
+        offerInStatus(OfferStatus.ACCEPTED, tenantEmail)
+        agreementInStatus(AgreementStatus.COMPLETED, tenantEmail)
+    {
+        // WORK WITH RENT amount
+        rentToContract.receiveMonthlyRent(tenantEmail, amount);
+    }
+
 }
 
