@@ -41,20 +41,21 @@ npm install
 
 ### Database
 DApp uses [Sequelize](http://docs.sequelizejs.com/) for database manipulation.
-Project is preconfigured to use PostgreSQL.
+Project is preconfigured to use PostgreSQL for storing some data that does not require decentralization.
 To connect to the database setup environmental variable **DATABASE_URL** in format:
 
 ```
 DATABASE_URL = "postgres://<user>:<password>@<host>:<port>/<database_name>"
 ```
 
+**NOTE:** You can download [POSTGRES](https://www.postgresql.org/download/) right here.
 **IMPORTANT:** Postgres should have [POSTGIS](https://postgis.net/) extension installed.
-And you should enable it in your database by running:
+And you should enable it in your database by running this SQL query:
 
 ```sql
 CREATE EXTENSION POSTGIS;
 ```
-
+Or, you can download and add it as an extension with the **Stack Builder** during the installation process.
 Database is automatically synchronized with Models definition.
 
 ### Run
@@ -70,6 +71,9 @@ NOTE: Project uses next mnemonic for development purposes, some configs are pred
 ```
 candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
 ```
+
+**NOTE:** The **Truffle** Project is in the *ethereum/* directory, where all the smart contracts and their corresponding tests reside.
+
 
 Compile the Smart Contracts.
 
