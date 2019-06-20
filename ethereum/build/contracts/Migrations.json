@@ -1442,12 +1442,12 @@
     "1560963215249": {
       "events": {},
       "links": {},
-      "address": "0x66078a97Def9d40B2cA7abb44733dD897Ec6231D",
-      "transactionHash": "0xf8d8b9682bb04ffdbad8119dc4ffecdf5c3eb017b590e329f855f4682b06c58c"
+      "address": "0xf491289b5DA695D7892B4960dcf48eB7e1ACb6B8",
+      "transactionHash": "0x57f3cfb17f07c55293f85f6e7f24556962aa653243e30f0fc41c5408b9813b28"
     }
   },
   "schemaVersion": "3.0.6",
-  "updatedAt": "2019-06-19T22:03:37.088Z",
+  "updatedAt": "2019-06-20T01:30:16.537Z",
   "devdoc": {
     "methods": {}
   },
