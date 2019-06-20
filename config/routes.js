@@ -6,6 +6,11 @@ module.exports = {
 
   'GET /enlistments': {
     controller: 'PropertyEnlistmentController',
+    action: 'find'
+  },
+
+  'GET /enlistments/geolocation': {
+    controller: 'PropertyEnlistmentController',
     action: 'findInArea'
   },
 

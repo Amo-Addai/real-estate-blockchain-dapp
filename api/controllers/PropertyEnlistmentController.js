@@ -37,5 +37,14 @@ module.exports = {
       parseFloat(req.query.latitude), parseFloat(req.query.longitude), parseFloat(req.query.distance)) || [];
 
     res.json(enlistments);
-  }
+  },
+
+  async find(req, res) {
+    let condition = req.query.condition || null;
+
+    const enlistments = await PropertyEnlistmentService.find(condition) || [];
+    console.log("ENLISTMENTS -> " + JSON.stringify(enlistments));
+
+    res.json(enlistments);
+  },
 };

@@ -53,6 +53,32 @@ module.exports = (sequelize) => {
   PropertyEnlistment.prototype.reject = function() {
     this.status = Status.REJECTED;
   };
+  
+  PropertyEnlistment.find = function(condition) {
+    let queryCondition = "";
+    if(condition && (Object.keys(condition).length > 0)){
+      queryCondition = " WHERE ";
+      for(var k in condition){
+        if(queryCondition !== " WHERE ") queryCondition += " AND ";
+        queryCondition += `
+        ${k} = '${condition[k]}'
+        `
+      }
+    }
+    const query = `
+    SELECT
+        *
+    FROM
+        "property_enlistments"
+    ` + queryCondition;
+
+    // console.log("QUERY -> " + query);
+
+    return sequelize.query(query, {
+      type: sequelize.QueryTypes.SELECT
+    });
+
+  };
 
   PropertyEnlistment.findInArea = function(latitude, longitude, distance) {
     const query = `

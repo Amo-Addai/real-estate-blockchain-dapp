@@ -49,6 +49,8 @@ DATABASE_URL = "postgres://<user>:<password>@<host>:<port>/<database_name>"
 ```
 
 **NOTE:** You can download [POSTGRES](https://www.postgresql.org/download/) right here.
+
+
 **IMPORTANT:** Postgres should have [POSTGIS](https://postgis.net/) extension installed.
 And you should enable it in your database by running this SQL query:
 
@@ -56,7 +58,7 @@ And you should enable it in your database by running this SQL query:
 CREATE EXTENSION POSTGIS;
 ```
 Or, you can download and add it as an extension with the **Stack Builder** during the installation process.
-Database is automatically synchronized with Models definition.
+Database is automatically synchronized with Model definitions.
 
 ### Run
 
@@ -72,7 +74,7 @@ NOTE: Project uses next mnemonic for development purposes, some configs are pred
 candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
 ```
 
-**NOTE:** The **Truffle** Project is in the *ethereum/* directory, where all the smart contracts and their corresponding tests reside.
+**NOTE:** The **Truffle** Project is in the *ethereum/* directory, where all the smart contracts and their corresponding test scripts reside.
 
 
 Compile the Smart Contracts.
@@ -115,8 +117,14 @@ The Express Server contains a number of actions / functions packaged as handlers
 
 Property enlistment is the core entity in the project. This API allows to create property enlistment in the database. Once created, it should be validated and either approved or rejected. Aproval triggers the deployment of Ethereum smart contract. 
 
+#### Get all enlistments
+This method allows to retreive all property enlistments available.
+```
+GET http://localhost:8080/enlistments?condition=***
+```
+
 #### Create enlistment
-Allows to create property enlistment
+Allows to create property enlistment, but only to store it in the PostGreSQL Database.
 ```
 POST http://localhost:8080/enlistments
 ```
@@ -160,9 +168,8 @@ This method allows to retreive all property enlistments in a given location, whe
 - longitude
 - distance in meters
 ```
-GET http://localhost:8080/enlistments?latitude=58.37947&longitude=26.7321715&distance=3000
+GET http://localhost:8080/enlistments/geolocation?latitude=58.37947&longitude=26.7321715&distance=3000
 ```
-
 
 ## Property Offers
 

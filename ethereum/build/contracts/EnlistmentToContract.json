@@ -23185,10 +23185,16 @@
       "links": {},
       "address": "0xE2B6CF3863240892d59664d209a28289a73EF644",
       "transactionHash": "0x305bb66f071320a53474316e7074c965ae36fa67caead96cad0e6ffaac12fddc"
+    },
+    "1561037874825": {
+      "events": {},
+      "links": {},
+      "address": "0x345cA3e014Aaf5dcA488057592ee47305D9B3e10",
+      "transactionHash": "0xfd5dd9515199525bbaa62b7c90d6e3bb69ef1debd5ebf8263071b2c02a16a79d"
     }
   },
   "schemaVersion": "3.0.6",
-  "updatedAt": "2019-06-20T01:30:16.546Z",
+  "updatedAt": "2019-06-20T18:09:59.963Z",
   "devdoc": {
     "methods": {}
   },

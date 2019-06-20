@@ -1,15 +1,27 @@
 'use strict';
 
+const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const asyncMiddleware = require('./utils').asyncMiddleware;
 const log = require('./logger');
 const middlewaresConfig = require('../config/middlewares');
 
+
+function returnPath(p, isStatic = false){
+  var pp = path.join((__dirname + '/..') + p);
+  // console.log("PATH -> " + pp);
+  return isStatic ? express.static(pp) : pp;
+}
+
 module.exports = {
   createHandlers(app, routes, controllers, middlewares) {
     app.use(bodyParser.json({limit: '10mb'}));
     app.use(bodyParser.urlencoded({limit: '10mb', extended: true})); // for parsing application/x-www-form-urlencoded
+
+    //  SETUP CLIENT ROUTES
+    app.use(returnPath('/client', true));
+    app.get('/client', (req, res) => res.sendFile(returnPath('/client/index.html')));
 
     app.use((req, res, next) => {
       log.verbose(`HTTP Request :: Method: ${req.method}, Url: ${req.url}`);

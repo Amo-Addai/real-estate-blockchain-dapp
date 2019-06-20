@@ -12,6 +12,10 @@ module.exports = {
     return Models.PropertyEnlistment.create(enlistment);
   },
 
+  find(condition = null) {
+    return Models.PropertyEnlistment.find(condition);
+  },
+
   findInArea(latitude, longitude, distance = 5000) {
     return Models.PropertyEnlistment.findInArea(latitude, longitude, distance);
   },

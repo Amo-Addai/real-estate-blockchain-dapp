@@ -4,17 +4,19 @@ const Web3 = require('web3');
 const contract = require('truffle-contract');
 const log = require('../../server/logger');
 
-const config = require('../../config/ethereum');
+const config = require('../../config/ethereum'); // GET THE CONFIG & THE ABI OF THE SMART CONTRACT
 const artifact = require('../../ethereum/build/contracts/EnlistmentToContract.json');
 
 const provider = new Web3.providers.HttpProvider(config.provider);
 
+log.info(`ETHEREUM CONFIG: ${JSON.stringify(config)}`);
+
 const PropertyEnlistmentContract = contract(artifact);
 PropertyEnlistmentContract.setProvider(provider);
 PropertyEnlistmentContract.defaults({
-  from: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57', // <- ADDRESS OF OWNER OF SMART CONTRACT
-  gas: 6000000,
-  gasPrice: 1000000000
+  from: config.defaults.from || '0x627306090abaB3A6e1400e9345bC60c78a8BEf57', // <- ADDRESS OF OWNER OF SMART CONTRACT
+  gas: config.defaults.gas || 6000000,
+  gasPrice: config.defaults.gasPrice || 1000000000
 });
 
 const offerStatusMap = {
