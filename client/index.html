@@ -65,7 +65,7 @@
                                 <table id="enlistmentsTable" class="table table-striped table-bordered table-hover">
                                     <tr id="enlistmentsTableHeader">
                                         <td>ID</td>
-                                        <td>Landlord</td>
+                                        <td>Landlord Name</td>
                                         <td>Street Name</td>
                                         <td>Status</td>
                                         <td>Smart Contract Address</td>
@@ -343,12 +343,12 @@
 
         <!--  -->
 
-        <div class="modal fade" id="review" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+        <div class="modal fade" id="reviewEnlistment" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title custom_align" id="Heading">Review this entry</h4>
+                        <h4 class="modal-title custom_align" id="Heading">Review this Enlistment</h4>
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-warning">
@@ -368,6 +368,54 @@
     
         <!--  -->
 
+        <div class="modal fade" id="reviewOffer" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title custom_align" id="Heading">Review this Offer</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-warning">
+                            <span class="glyphicon glyphicon-warning-sign">
+                            </span> How do you want to review this?
+                        </div> 
+                    </div>
+                    <div class="modal-footer ">
+                        <button id="approveOffer" type="button" class="btn btn-danger" data-dismiss="modal" aria-hidden="true" ><span class="glyphicon glyphicon-ok-sign"></span> Accept</button>
+                        <button id="rejectOffer" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true" ><span class="glyphicon glyphicon-remove"></span> Reject</button>
+                    </div>
+                </div>
+                <!-- /.modal-content --> 
+            </div>
+            <!-- /.modal-dialog --> 
+        </div>
+    
+        <!--  -->
+
+        <div class="modal fade" id="reviewAgreement" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title custom_align" id="Heading">Review this Agreement</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-warning">
+                            <span class="glyphicon glyphicon-warning-sign">
+                            </span> How do you want to review this?
+                        </div> 
+                    </div>
+                    <div class="modal-footer ">
+                        <button id="approveAgreement" type="button" class="btn btn-danger" data-dismiss="modal" aria-hidden="true" ><span class="glyphicon glyphicon-ok-sign"></span> Confirm</button>
+                        <button id="rejectAgreement" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true" ><span class="glyphicon glyphicon-remove"></span> Reject</button>
+                    </div>
+                </div>
+                <!-- /.modal-content --> 
+            </div>
+            <!-- /.modal-dialog --> 
+        </div>
+    
         <!--  -->
 
     </div>
@@ -396,6 +444,7 @@
         window.localStorage.setItem("editId", "");
         window.localStorage.setItem("deleteId", "");
         window.localStorage.setItem("reviewId", "");
+        window.localStorage.setItem("reviewTenantEmail", "");
 
         window.onload = function () { //   <span class="caret"></span>
             $("#chosenAccount").html(window.localStorage.getItem("chosenAccount") + '   <span class="caret"></span>');
@@ -423,7 +472,7 @@
             }
             $(".approvedEnlistmentsList").click(async function (e) {
                 e.preventDefault();
-                e.stopPropagation();
+                // e.stopPropagation();
                 // e.target is our targetted element so e.target.nodeName is "A"
                 if (e.target && e.target.nodeName == "A") {
                     var x = e.target.id;
@@ -470,29 +519,38 @@
                         var result = await makeRequest("enlistments/" + id + "/" + action, "POST");
                         if(result){ // VERY TERRIBLE API, DOESN'T RETURN ANY SUCCESS / FAILURE RESULT :(
                             console.log("RESULT -> " + JSON.stringify(result));
-                            console.log("RELOADING DATA ...");
-                            getData();
-                            window.localStorage.setItem("reviewId", "");
-                        } else {
-                            console.log("RELOADING DATA ...");
-                            getData();
-                            window.localStorage.setItem("reviewId", "");
-                        }
+                        } 
+                        console.log("RELOADING DATA ...");
+                        getData();
+                        window.localStorage.setItem("reviewId", "");
                     } else alert("Sorry, some error occured");
                 } else if (id != null && id != undefined) {
                     // NOW, CONTINUE ON TO APPROVE / REJECT THE PROPERTY ENLISTMENT ..
                     var result = await makeRequest("enlistments/" + id + "/" + action, "POST");
                     if(result){ // VERY TERRIBLE API, DOESN'T RETURN ANY SUCCESS / FAILURE RESULT :(
                         console.log("RESULT -> " + JSON.stringify(result));
-                        console.log("RELOADING DATA ...");
-                        getData();
-                        window.localStorage.setItem("reviewId", "");
-                    } else {
-                        console.log("RELOADING DATA ...");
-                        getData();
-                        window.localStorage.setItem("reviewId", "");
-                    }
+                    } 
+                    console.log("RELOADING DATA ...");
+                    getData();
+                    window.localStorage.setItem("reviewId", "");
                 }
+            }
+
+            async function handleSubAction (sub, action, { id, tenantEmail, approved }){
+                console.log("SUB ACTION -> " + sub + " : " + action);
+                console.log("BODY -> " + JSON.stringify({ id, tenantEmail, approved }));
+                result = null;
+                if(sub === "offer" && ["approve", "reject"].includes(action)){
+                    result = await makeRequest("enlistments/" + id + "/offers/review", "POST", null, { tenantEmail, approved });
+                } else if (sub === "agreement" && ["approve", "reject"].includes(action)) {
+                    result = await makeRequest("enlistments/" + id + "/agreements/review", "POST", null, { tenantEmail, confirmed: approved });
+                }
+                if(result){ // VERY TERRIBLE API, DOESN'T RETURN ANY SUCCESS / FAILURE RESULT YET :(
+                    console.log("RESULT -> " + JSON.stringify(result));
+                } 
+                console.log("RELOADING SUB-DATA ...");
+                // window.localStorage.setItem("reviewId", "");
+                getEnlistmentOfferAndAgreementData(await findObject(id));
             }
 
             $("#approve").click(function (e) { // 
@@ -502,7 +560,6 @@
                 console.log("ID !!!! -> " + id);
                 handleAction("approve", null, id);
             });
-            
             $("#reject").click(function (e) { // 
                 // e.preventDefault();
                 // e.stopPropagation();
@@ -510,10 +567,41 @@
                 console.log("ID !!!! -> " + id);
                 handleAction("reject", null, id);
             });
+            // 
+            $("#approveOffer").click(function (e) { // 
+                // e.preventDefault();
+                // e.stopPropagation();
+                id = JSON.parse(window.localStorage.getItem("chosenEnlistment")).id;
+                emailId = window.localStorage.getItem("reviewTenantEmail");
+                handleSubAction("offer", "approve", { id, "tenantEmail": emailId, "approved": true });
+            });
+            $("#rejectOffer").click(function (e) { // 
+                // e.preventDefault();
+                // e.stopPropagation();
+                id = JSON.parse(window.localStorage.getItem("chosenEnlistment")).id;
+                emailId = window.localStorage.getItem("reviewTenantEmail");
+                handleSubAction("offer", "reject", { id, "tenantEmail": emailId, "approved": false });
+            });
+            // 
+            $("#approveAgreement").click(function (e) { // 
+                // e.preventDefault();
+                // e.stopPropagation();
+                id = JSON.parse(window.localStorage.getItem("chosenEnlistment")).id;
+                emailId = window.localStorage.getItem("reviewTenantEmail");
+                handleSubAction("agreement", "approve", { id, "tenantEmail": emailId, "confirmed": true });
+            });
+            $("#rejectAgreement").click(function (e) { // 
+                // e.preventDefault();
+                // e.stopPropagation();
+                id = JSON.parse(window.localStorage.getItem("chosenEnlistment")).id;
+                emailId = window.localStorage.getItem("reviewTenantEmail");
+                handleSubAction("agreement", "reject", { id, "tenantEmail": emailId, "confirmed": false });
+            });
+            // 
 
             function setupOnListItemClick (){
 
-                $(".reviewButton").click(async function (e) { // 
+                $(".reviewEnlistmentButton").click(async function (e) { // 
                     var row = await getRow(e, this);
                     console.log("ROW NODE -> " + row.nodeName + " : ID -> " + row.id);
                     if(row != null && row != undefined){
@@ -522,6 +610,30 @@
                         console.log("OBJ -> " + JSON.stringify(obj));
                         if(obj) { // SHOW A REVIEW ("APPROVE / REJECT ?") DIALOG BOX, BEFORE PERFORMING ACTION
                             window.localStorage.setItem("reviewId", id);
+                        } else alert("Sorry, some error occured");
+                    } else alert("Sorry, some error occured");
+                });
+                $(".reviewOfferButton").click(async function (e) { // 
+                    var row = await getRow(e, this);
+                    console.log("ROW -> " + row);
+                    console.log("ROW NODE -> " + row.nodeName + " : ID -> " + row.id);
+                    if(row != null && row != undefined){
+                        var id = row.id || null; // id IS tenantEmail
+                        if(id) { // SHOW A REVIEW ("APPROVE / REJECT ?") DIALOG BOX, BEFORE PERFORMING ACTION
+                            console.log("EMAIL ID -> " + JSON.stringify(id));
+                            window.localStorage.setItem("reviewTenantEmail", id);
+                        } else alert("Sorry, some error occured");
+                    } else alert("Sorry, some error occured");
+                });
+                $(".reviewAgreementButton").click(async function (e) { // 
+                    var row = await getRow(e, this);
+                    console.log("ROW -> " + row);
+                    console.log("ROW NODE -> " + row.nodeName + " : ID -> " + row.id);
+                    if(row != null && row != undefined){
+                        var id = row.id || null; // id IS tenantEmail
+                        if(id) { // SHOW A REVIEW ("APPROVE / REJECT ?") DIALOG BOX, BEFORE PERFORMING ACTION
+                            console.log("EMAIL ID -> " + JSON.stringify(id));
+                            window.localStorage.setItem("reviewTenantEmail", id);
                         } else alert("Sorry, some error occured");
                     } else alert("Sorry, some error occured");
                 });
@@ -542,38 +654,6 @@
                     console.log("ROW NODE -> " + row.nodeName + " : ID -> " + row.id);
                     handleAction("reject", row);
                 });
-
-                /*
-                $(".editButton").click(async function (e) { // 
-                    var row = await getRow(e, this);
-                    console.log("ROW NODE -> " + row.nodeName + " : ID -> " + row.id);
-                    if(row != null && row != undefined){
-                        var id = row.id || "";
-                        var obj = await findObject(id);
-                        console.log("OBJ -> " + JSON.stringify(obj));
-                        if(obj) { // NOW, SET THE FORM INPUTS TO THE DATA OF LIST ITEM CLICKED ON ...
-                            window.localStorage.setItem("editMode", true);
-                            window.localStorage.setItem("editId", obj.id || "");
-                            $("#editname").val(obj.name || "");
-                            $("#editemail").val(obj.email || "");
-                        } else alert("Sorry, some error occured");
-                    } else alert("Sorry, some error occured");
-                });
-
-                $(".deleteButton").click(async function (e) { // 
-                    var row = await getRow(e, this);
-                    console.log("ROW NODE -> " + row.nodeName + " : ID -> " + row.id);
-                    if(row != null && row != undefined){
-                        var id = row.id || "";
-                        var obj = await findObject(id);
-                        console.log("OBJ -> " + JSON.stringify(obj));
-                        if(obj) { // SHOW A DELETE ("ARE YOU SURE?") DIALOG BOX, BEFORE DELETING
-                            window.localStorage.setItem("deleteId", id);
-                        } else alert("Sorry, some error occured");
-                    } else alert("Sorry, some error occured");
-                });
-                */
-
 
             } setupOnListItemClick(); // CALL THIS FUNCTION RIGHT AFTER DECLARING IT
        
@@ -635,34 +715,11 @@
                     table.append('<tr id="' + obj.id + '"><td>' + obj.id + '</td><td>' + obj.landlordName + '</td><td>' + obj.streetName + '</td>' +
                         '<td>' + obj.status + '</td><td>' + (obj.contractAddress || "-") + '</td>' +
                         '<td>' +  
-                            '<button class="reviewButton btn btn-primary btn-sm pull-right" data-title="Review" data-toggle="modal" data-target="#review" data-placement="top" rel="tooltip">' +
+                            '<button class="reviewEnlistmentButton btn btn-primary btn-sm pull-right" data-title="Review" data-toggle="modal" data-target="#reviewEnlistment" data-placement="top" rel="tooltip">' +
                                 'Review' +
                             '</button>' +
-                            /*
-                            '<button class="approveEnlistmentButton btn btn-primary btn-sm pull-left" style="margin: 2px">Approve</button>' +
-                            '<button class="rejectEnlistmentButton btn btn-danger btn-sm pull-left" style="margin: 2px">Reject</button>' +
-                            '<button class="editButton btn btn-primary btn-sm pull-left" data-title="Edit" data-toggle="modal" data-target="#edit" data-placement="top" rel="tooltip">' +
-                                '<span class="glyphicon glyphicon-pencil"></span>' +
-                            '</button>' +
-                            '<button class="deleteButton btn btn-danger btn-sm pull-right" data-title="Delete" data-toggle="modal" data-target="#delete" data-placement="top" rel="tooltip">' +
-                                '<span class="glyphicon glyphicon-trash"></span>' +
-                            '</button>' +
-                            */
                         '</td>' +
                     '</tr>');
-                    /*
-                    <td>
-                        <!-- <p><button class="btn btn-primary btn-sm pull-left" data-title="Edit" data-toggle="modal" data-target="#edit" data-placement="top" rel="tooltip">
-                            <span class="glyphicon glyphicon-pencil"></span></button></p>
-                        <p><button class="btn btn-danger btn-sm pull-right" data-title="Delete" data-toggle="modal" data-target="#delete" data-placement="top" rel="tooltip">
-                            <span class="glyphicon glyphicon-trash"></span></button></p> -->
-
-                        <button class="btn btn-primary btn-sm pull-left" data-title="Edit" data-toggle="modal" data-target="#edit" data-placement="top" rel="tooltip">
-                            <span class="glyphicon glyphicon-pencil"></span></button>
-                        <button class="btn btn-danger btn-sm pull-right" data-title="Delete" data-toggle="modal" data-target="#delete" data-placement="top" rel="tooltip">
-                            <span class="glyphicon glyphicon-trash"></span></button>
-                    </td>
-                    */
                     if(obj.status == "APPROVED") approvedEnlistments.push(obj);
                 }
                 console.log(approvedEnlistments.length + " APPROVED ENLISTMENTS");
@@ -675,9 +732,49 @@
             } getData(); // CALL THIS FUNCTION RIGHT AFTER DECLARING IT
 
 
-            async function getEnlistmentOfferAndAgreementData(obj){
-                console.log("GETTING OFFER & AGREEMENT DATA FOR ENLISTMENT -> " + JSON.stringify(obj));
+            async function getEnlistmentOfferAndAgreementData(enlistmentObj){
+                console.log("GETTING OFFER & AGREEMENT DATA FOR ENLISTMENT -> " + JSON.stringify(enlistmentObj));
                 // 
+                var type = null, data = null;
+                for(type of ["offer", "agreement"]){
+                    data = await makeRequest("enlistments/" + enlistmentObj.id + "/" + type+"s", "GET");
+                    window.localStorage.setItem(type+"Data", JSON.stringify(data));
+                    switch(type){
+                        case "offer": /* <tr id="offersTableHeader">
+                            <td>Initialized</td><td>Tenant Name</td><td>Tenant Email</td><td>Amount</td><td>Status</td><td>Action</td> </tr> */
+                            var table = $("#offersTable");
+                            table.find("tr:not(:first)").remove();
+                            for (var obj of data) { // THE MAIN UNIQUE PROP OF OFFERS IS .tenantEmail
+                                table.append('<tr id="' + obj.tenantEmail + '"><td>' + (obj.initialized ? "Yes": "No") + '</td><td>' + obj.tenantName + '</td><td>' + 
+                                    obj.tenantEmail + '</td><td>' + obj.amount + '</td>' + '<td>' + obj.status + '</td>' +
+                                    '<td>' +  
+                                        (obj.status === "ACCEPTED" ? '' : 
+                                        '<button class="reviewOfferButton btn btn-primary btn-sm pull-right" data-title="Review" data-toggle="modal" data-target="#reviewOffer" data-placement="top" rel="tooltip">' +
+                                            'Review' +
+                                        '</button>') +
+                                    '</td>' +
+                                '</tr>');
+                            }
+                        break;
+                        case "agreement": /* <tr id="agreementsTableHeader">
+                            <td>Landlord Name</td><td>Tenant Name</td><td>Tenant Email</td><td>Amount</td><td>Status</td><td>Action</td> </tr> */
+                            var table = $("#agreementsTable");
+                            table.find("tr:not(:first)").remove();
+                            for (var obj of data) {
+                                table.append('<tr id="' + obj.tenantEmail + '"><td>' + obj.landlordName + '</td><td>' + obj.tenantName + 
+                                    '</td><td>' + obj.tenantEmail + '</td><td>' + obj.amount + '</td>' + '<td>' + obj.status + '</td>' +
+                                    '<td>' +  
+                                        (obj.status === "ACCEPTED" ? '' : 
+                                        '<button class="reviewAgreementButton btn btn-primary btn-sm pull-right" data-title="Review" data-toggle="modal" data-target="#reviewAgreement" data-placement="top" rel="tooltip">' +
+                                            'Review' +
+                                        '</button>') +
+                                    '</td>' +
+                                '</tr>');
+                            }
+                        break;
+                    }
+                }
+                setupOnListItemClick();
             }
 
 
@@ -770,7 +867,7 @@
                         
 
    
-   $('#addAgreementFormSubmit').click(function(e){
+            $('#addAgreementFormSubmit').click(function(e){
                 e.preventDefault();
                 // console.log("PREVENTING RELOADING OF THIS PAGE, BUT STILL CALLING FORM'S 'onSubmit'");
                 $('#addAgreementForm').submit(); 

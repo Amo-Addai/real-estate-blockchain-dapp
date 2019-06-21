@@ -13,19 +13,19 @@ module.exports = {
   },
 
   async approveEnlistment(req, res) {
-    await PropertyEnlistmentService.approveEnlistment(req.params.id);
+    const enlistment = await PropertyEnlistmentService.approveEnlistment(req.params.id);
 
     log.info(`Enlistment with id: ${req.params.id} approved`);
 
-    res.status(200).send();
+    res.status(200).json(enlistment);
   },
 
   async rejectEnlistment(req, res) {
-    await PropertyEnlistmentService.rejectEnlistment(req.params.id);
+    const enlistment = await PropertyEnlistmentService.rejectEnlistment(req.params.id);
 
     log.info(`Enlistment with id: ${req.params.id} rejected`);
 
-    res.status(200).send();
+    res.status(200).json(enlistment);
   },
 
   async findInArea(req, res) {

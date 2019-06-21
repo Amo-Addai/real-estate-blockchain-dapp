@@ -42,14 +42,17 @@ npm install
 ### Database
 DApp uses [Sequelize](http://docs.sequelizejs.com/) for database manipulation.
 Project is preconfigured to use PostgreSQL for storing some data that does not require decentralization.
-To connect to the database setup environmental variable **DATABASE_URL** in format:
+
+
+**NOTE:** You can download [POSTGRES](https://www.postgresql.org/download/) right here.
+Install PostgreSQL and set it up on localhost on port 5432, then create a new database (eg. *real_estate_database*). 
+To connect to your created database, setup environmental variable **DATABASE_URL** in format:
 
 ```
 DATABASE_URL = "postgres://<user>:<password>@<host>:<port>/<database_name>"
+
+eg. DATABASE_URL = "postgres://postgres:password@localhost:5432/real_estate_database"
 ```
-
-**NOTE:** You can download [POSTGRES](https://www.postgresql.org/download/) right here.
-
 
 **IMPORTANT:** Postgres should have [POSTGIS](https://postgis.net/) extension installed.
 And you should enable it in your database by running this SQL query:

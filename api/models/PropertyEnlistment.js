@@ -41,6 +41,16 @@ module.exports = (sequelize) => {
       values: [Status.PENDING, Status.APPROVED, Status.REJECTED, Status.CANCELLED],
       defaultValue: Status.PENDING
     },
+    offerTenantEmails: {
+      type: DataTypes.ARRAY(DataTypes.TEXT),
+      allowNull: false,
+      defaultValue: []
+    },
+    agreementTenantEmails: {
+      type: DataTypes.ARRAY(DataTypes.TEXT),
+      allowNull: false,
+      defaultValue: []
+    },
     geolocation: DataTypes.GEOMETRY('POINT') // eslint-disable-line new-cap
   }, {
     freezeTableName: true

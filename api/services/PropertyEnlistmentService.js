@@ -52,7 +52,43 @@ module.exports = {
       }
     });
 
+    if(tenantEmail){
+      if(!enlistment.offerTenantEmails) enlistment.offerTenantEmails = [];
+      if(!enlistment.offerTenantEmails.includes(tenantEmail))
+        enlistment.offerTenantEmails.push(tenantEmail);
+      Models.PropertyEnlistment.update(
+        {offerTenantEmails: enlistment.offerTenantEmails},
+        {where: {id: enlistment.id}}
+      ).then(function(rowsUpdated) {})
+      .catch(err => {
+        console.log(err);
+        console.log("ERROR -> " + JSON.stringify(err));
+      });
+    }
+
     return PropertyEnlistmentContractService.sendOffer(enlistment.contractAddress, {amount, tenantName, tenantEmail});
+  },
+
+  async getOffers(enlistmentId) {
+    const enlistment = await Models.PropertyEnlistment.findOne({
+      where: {
+        id: enlistmentId
+      }
+    });
+    console.log("ENLISTMENT -> " + JSON.stringify(enlistment));
+    var offers = [];
+    if(enlistment.offerTenantEmails.length > 0){
+      var offer = null, email = null;
+      for(email of enlistment.offerTenantEmails){
+        console.log("GETTING OFFER FROM -> " + email);
+        offer = await PropertyEnlistmentContractService.getOffer(enlistment.contractAddress, email);
+        if(offer) {
+          console.log("APPEND OFFER -> " + JSON.stringify(offer));
+          offers.push(offer);
+        }
+      }
+    }
+    return offers;
   },
 
   async getOffer(enlistmentId, tenantEmail) {
@@ -92,7 +128,39 @@ module.exports = {
       }
     });
 
+    if(agreementDraft.agreementTenantEmail){
+      if(!enlistment.agreementTenantEmails) enlistment.agreementTenantEmails = [];
+      if(!enlistment.agreementTenantEmails.includes(agreementDraft.agreementTenantEmail))
+        enlistment.agreementTenantEmails.push(agreementDraft.agreementTenantEmail);
+      Models.PropertyEnlistment.update(
+        {agreementTenantEmails: enlistment.agreementTenantEmails},
+        {where: {id: enlistment.id}}
+      ).then(function(rowsUpdated) {})
+      .catch(err => {
+        console.log(err);
+        console.log("ERROR -> " + JSON.stringify(err));
+      });
+    }
+
     return PropertyEnlistmentContractService.submitAgreementDraft(enlistment.contractAddress, agreementDraft);
+  },
+
+  async getAgreements(enlistmentId) {
+    const enlistment = await Models.PropertyEnlistment.findOne({
+      where: {
+        id: enlistmentId
+      }
+    }); 
+    console.log("ENLISTMENT -> " + JSON.stringify(enlistment));
+    var agreements = [];
+    if(enlistment.agreementTenantEmails.length > 0){
+      var agreement = null, email = null;
+      for(email of enlistment.agreementTenantEmails){
+        agreement = await PropertyEnlistmentContractService.getAgreement(enlistment.contractAddress, email);
+        if(agreement) agreements.push(agreement);
+      }
+    }
+    return agreements;
   },
 
   async getAgreement(enlistmentId, tenantEmail) {
