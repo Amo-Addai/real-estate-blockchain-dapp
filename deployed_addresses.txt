@@ -6,12 +6,14 @@
         - Block - 4590667
         - Deployer Address - 0x3C63Ae02f432f5A49d9518657116Ba907234F187
         - Contract Address - 0x4414a2ab625673dda11ed0c319ec824d89cbe107
+        - Link - https://rinkeby.etherscan.io/address/0x4414a2ab625673dda11ed0c319ec824d89cbe107#contracts
 
     - RentToContract.sol
         - Transaction Hash - 0x12b3eaf4b3eda38a1b56e0768318efd4bbedb9b0a8fa8b51783c6ba7983515a5
         - Block - 4590797
         - Deployer Address - 0x46025a4756986fFdB612222D27d8b4e04F68c2A2
         - Contract Address - 0xedac8ee25054d2232bb8806ced2cc86b581bd411
+        - Link - https://rinkeby.etherscan.io/address/0xedac8ee25054d2232bb8806ced2cc86b581bd411#contracts
 
 
 2. Ropsten Testnet Addresses
@@ -21,10 +23,12 @@
         - Block - 5826853
         - Deployer Address - 0x3C63Ae02f432f5A49d9518657116Ba907234F187
         - Contract Address - 0x5ba12aa51f84805c49cee78cdbeb2189e614d270
+        - Link - https://ropsten.etherscan.io/address/0x5ba12aa51f84805c49cee78cdbeb2189e614d270#contracts
 
     - RentToContract.sol
         - Transaction Hash - 0x3f22fdd487dcdf7289c6050efa87fe4e40636e555e3c539e9bfca989ae559967
         - Block - 5826875
         - Deployer Address - 0x46025a4756986fFdB612222D27d8b4e04F68c2A2
         - Contract Address - 0x1f276bee27a1cb550917d96fff6e8b5abfb83383
+        - Link - https://ropsten.etherscan.io/address/0x1f276bee27a1cb550917d96fff6e8b5abfb83383#contracts
 
