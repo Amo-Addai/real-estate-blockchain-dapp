@@ -12,7 +12,7 @@
   "dependencies": {
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
-    "express": "^4.16.2",
+    "express": "^4.17.3",
     "lodash": "^4.17.5",
     "pg": "^7.4.1",
     "pg-hstore": "^2.3.2",
