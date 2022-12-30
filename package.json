@@ -28,7 +28,7 @@
     "eslint": "^4.13.1",
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-node": "^5.2.1",
-    "ganache-cli": "^6.0.3",
+    "ganache-cli": "^6.12.2",
     "web3-utils": "^1.0.0-beta.55"
   },
   "keywords": [
