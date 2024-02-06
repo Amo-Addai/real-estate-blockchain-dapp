@@ -51,6 +51,7 @@ lib-cov
 *.pid
 npm-debug.log
 node_modules/ 
+package-lock.json
 # THIS SHOULD BE UNCOMMENTED LATER THOUGH
 # IT'S COMMENTED NOW SO node_modules/ LIBRARIES WILL BE SENT TO GITHUB
 # SO WHEN EVALUATORS git clone THE PROJECT, THEY WON'T HAVE TO GO THROUGH INSTALLATIONS ISSUES ..
@@ -73,4 +74,4 @@ nbproject
 .node_history
 z_*
 .vscode/
-
+.history/

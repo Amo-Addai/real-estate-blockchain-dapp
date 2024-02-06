@@ -1,6 +1,6 @@
 # Real Estate Blockchain Decentralized Application
 
-Proof of Concept Project; a real-estate property enlistment decentalized application integrated with the Ethereum Blockchain, using Ethereum Smart Contracts written in Solidity.
+Proof of Concept Project; a real-estate property enlistment decentralized application integrated with the Ethereum Blockchain, using Ethereum Smart Contracts written in Solidity.
 
 The DApp consists of 4 main components; the Node.js Express backend server connected to a PostgreSQL Database (with a PostGIS Extension), with the Node.js Express Server serving a basic Html/Javascript frontend Web Application, and an integration with the Ethereum Blockchain Network.
 

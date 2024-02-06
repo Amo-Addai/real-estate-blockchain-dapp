@@ -1,13 +1,16 @@
 {
   "name": "real-estate-blockchain",
   "version": "0.0.1",
-  "description": "POC of real-estate app with blockchain parts",
+  "description": "Proof-of-concept of real-estate database on the blockchain",
   "main": "app.js",
+  "author": "Kwadwo Amo-Addai",
+  "license": "MIT",
   "scripts": {
     "start": "node app.js",
     "start:eth": "ganache-cli -m \"candy maple cake sugar pudding cream honey rich smooth crumble sweet treat\"",
     "lint": "eslint api/ server/",
-    "test": "cd ethereum && truffle test"
+    "compile:contracts": "cd ethereum && truffle compile",
+    "test:contracts": "cd ethereum && truffle test"
   },
   "dependencies": {
     "bluebird": "^3.5.1",
@@ -37,8 +40,6 @@
     "real-estate",
     "smart contracts"
   ],
-  "author": "Kwadwo Amo-Addai",
-  "license": "MIT",
   "engines": {
     "node": ">=8.0.0"
   }
