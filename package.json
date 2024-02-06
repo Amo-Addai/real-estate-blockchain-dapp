@@ -10,6 +10,7 @@
     "start:eth": "ganache-cli -m \"candy maple cake sugar pudding cream honey rich smooth crumble sweet treat\"",
     "lint": "eslint api/ server/",
     "compile:contracts": "cd ethereum && truffle compile",
+    "migrate:contracts": "cd ethereum && truffle migrate",
     "test:contracts": "cd ethereum && truffle test"
   },
   "dependencies": {
