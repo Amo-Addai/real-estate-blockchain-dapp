@@ -9,9 +9,6 @@ The DApp consists of 4 main components; the Node.js Express backend server conne
 Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes. 
 See deployment for notes on how to deploy the project on a live system.
 
-
-You can view the [Demo](https://www.youtube.com/watch?v=JOLwPSKo-jA) here.
-
 ### Prerequisites and Installation
 
 You need Node.js >= 8.0.0.
