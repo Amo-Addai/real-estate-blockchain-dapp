@@ -33,6 +33,12 @@ Clone the repository
 git clone https://github.com/Amo-Addai/real-estate-blockchain.git
 ```
 
+Go into the project directory
+
+```
+cd real-estate-blockchain/
+```
+
 Install dependencies
 
 ```
