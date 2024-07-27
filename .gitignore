@@ -74,4 +74,6 @@ nbproject
 .node_history
 z_*
 .vscode/
+.metals/
+.scala-build/
 .history/

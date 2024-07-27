@@ -107,6 +107,10 @@ Check [Truffle docs](http://truffleframework.com/docs/) for details.
 truffle test
 ```
 
+<!-- 
+todo: ganache-cli
+ -->
+
 Then run server with 
 
 ```
