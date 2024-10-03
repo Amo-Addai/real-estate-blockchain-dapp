@@ -66,6 +66,7 @@ package-lock.json
 *~
 *#
 .DS_STORE
+.DS_Store
 .netbeans
 nbproject
 .idea
